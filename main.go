@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
+	"path/filepath"
 )
 
 func main() {
@@ -19,5 +20,8 @@ func main() {
 }
 
 func ProcessFile(fileName string) {
-	fmt.Printf("%v\n", fileName)
+	ext := filepath.Ext(fileName)
+	newFileName := fileName[0 : len(fileName)-len(ext)]
+	newFileName = newFileName + ".xcbr"
+	fmt.Printf("%v - %v\n", fileName, newFileName)
 }
