@@ -11,8 +11,13 @@ func main() {
 	for i := 1; i < len(os.Args); i++ {
 		list, _ := fs.Glob(curDirFS, os.Args[i])
 		for i := 0; i < len(list); i++ {
-			fmt.Printf("%v\n", list[i])
+			ProcessFile(list[i])
+
 		}
 	}
 
+}
+
+func ProcessFile(fileName string) {
+	fmt.Printf("%v\n", fileName)
 }
