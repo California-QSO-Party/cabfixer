@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/fs"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -24,4 +25,12 @@ func ProcessFile(fileName string) {
 	newFileName := fileName[0 : len(fileName)-len(ext)]
 	newFileName = newFileName + ".xcbr"
 	fmt.Printf("%v - %v\n", fileName, newFileName)
+	data, err := os.ReadFile(fileName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = os.WriteFile(newFileName, data, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
