@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io/fs"
 	"log"
@@ -29,7 +30,15 @@ func ProcessFile(fileName string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = os.WriteFile(newFileName, data, 0666)
+	lines := bytes.Split(data, []byte("\n"))
+	qsoLines := make([][]byte, 0)
+	for i := 0; i < len(lines); i++ {
+		if bytes.HasPrefix(lines[i], []byte("QSO:")) {
+			qsoLines = append(qsoLines, lines[i])
+		}
+	}
+	outputData := bytes.Join(qsoLines, []byte("\n"))
+	err = os.WriteFile(newFileName, outputData, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
