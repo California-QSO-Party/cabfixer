@@ -37,9 +37,34 @@ func ProcessFile(fileName string) {
 			qsoLines = append(qsoLines, lines[i])
 		}
 	}
+
 	outputData := bytes.Join(qsoLines, []byte("\n"))
 	err = os.WriteFile(newFileName, outputData, 0666)
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+func longestLine(lines [][]byte) int {
+	max := 0
+	for i := 0; i < len(lines); i++ {
+		if len(lines[i]) > max {
+			max = len(lines[i])
+		}
+	}
+	return max
+}
+
+func identifyTableColumns(lines [][]byte) {
+	longestLine := longestLine(lines)
+	charCount := make([]int, longestLine)
+	for j := 0; j < len(lines); j++ {
+		count := 0
+		for i := 0; i < longestLine; i++ {
+			if lines[i][j] != ' ' {
+				count++
+			}
+		}
+		charCount[j] = count
 	}
 }
