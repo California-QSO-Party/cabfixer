@@ -37,6 +37,7 @@ func ProcessFile(fileName string) {
 			qsoLines = append(qsoLines, lines[i])
 		}
 	}
+	identifyTableColumns(qsoLines)
 
 	outputData := bytes.Join(qsoLines, []byte("\n"))
 	err = os.WriteFile(newFileName, outputData, 0666)
@@ -45,26 +46,36 @@ func ProcessFile(fileName string) {
 	}
 }
 
-func longestLine(lines [][]byte) int {
+func longestLine(qsoLines [][]byte) int {
 	max := 0
-	for i := 0; i < len(lines); i++ {
-		if len(lines[i]) > max {
-			max = len(lines[i])
+	for i := 0; i < len(qsoLines); i++ {
+		fmt.Printf("longestLine index: %d\n", i)
+		if len(qsoLines[i]) > max {
+			max = len(qsoLines[i])
 		}
 	}
 	return max
 }
 
 func identifyTableColumns(lines [][]byte) {
+
 	longestLine := longestLine(lines)
 	charCount := make([]int, longestLine)
-	for j := 0; j < len(lines); j++ {
+	for j := 0; j < longestLine; j++ {
+
 		count := 0
-		for i := 0; i < longestLine; i++ {
+		fmt.Printf("identifyTableColumns index j: %d\n", j)
+		for i := 0; i < len(lines); i++ {
+			if len(lines[i]) <= j {
+				continue
+			}
+			fmt.Printf("identifyTableColumns index i: %d\n", i)
+			fmt.Printf("identifyTableColumns content i: %s\n", lines[i])
 			if lines[i][j] != ' ' {
 				count++
 			}
 		}
 		charCount[j] = count
 	}
+	fmt.Printf("%v", charCount)
 }
