@@ -37,9 +37,10 @@ func ProcessFile(fileName string) {
 			qsoLines = append(qsoLines, lines[i])
 		}
 	}
-	identifyTableColumns(qsoLines)
+	columnPos := identifyTableColumns(qsoLines)
+	markedUpQsoLines := markUpQSOLines(qsoLines, columnPos)
 
-	outputData := bytes.Join(qsoLines, []byte("\n"))
+	outputData := bytes.Join(markedUpQsoLines, []byte("\n"))
 	err = os.WriteFile(newFileName, outputData, 0666)
 	if err != nil {
 		log.Fatal(err)
@@ -49,7 +50,7 @@ func ProcessFile(fileName string) {
 func longestLine(qsoLines [][]byte) int {
 	max := 0
 	for i := 0; i < len(qsoLines); i++ {
-		fmt.Printf("longestLine index: %d\n", i)
+
 		if len(qsoLines[i]) > max {
 			max = len(qsoLines[i])
 		}
@@ -64,20 +65,18 @@ func identifyTableColumns(lines [][]byte) []int {
 	for j := 0; j < longestLine; j++ {
 
 		count := 0
-		fmt.Printf("identifyTableColumns index j: %d\n", j)
+
 		for i := 0; i < len(lines); i++ {
 			if len(lines[i]) <= j {
 				continue
 			}
-			fmt.Printf("identifyTableColumns index i: %d\n", i)
-			fmt.Printf("identifyTableColumns content i: %s\n", lines[i])
+
 			if lines[i][j] != ' ' {
 				count++
 			}
 		}
 		charCount[j] = count
 	}
-	fmt.Printf("%v\n", charCount)
 	// Count positions of where each column starts.
 	columnPos := []int{0}
 	threshold := len(lines)/2 + 1
@@ -86,7 +85,30 @@ func identifyTableColumns(lines [][]byte) []int {
 			columnPos = append(columnPos, i)
 		}
 	}
-	fmt.Printf("Start of columns ind: %v\n", columnPos)
+	columnPos = append(columnPos, longestLine)
 	return columnPos
 
+}
+
+func markUpQSOLines(qsoLines [][]byte, columnPos []int) [][]byte {
+	markedUpQsoLines := make([][]byte, len(qsoLines))
+	for i := 0; i < len(qsoLines); i++ {
+		markedUpQsoLines[i] = append(markedUpQsoLines[i], '|')
+		for j := 0; j < len(columnPos)-1; j++ {
+			l := min(columnPos[j], len(qsoLines[i]))
+			r := min(columnPos[j+1], len(qsoLines[i]))
+			e := bytes.Trim(qsoLines[i][l:r], " \t\r\n")
+			markedUpQsoLines[i] = append(markedUpQsoLines[i], e...)
+			markedUpQsoLines[i] = append(markedUpQsoLines[i], '|')
+		}
+	}
+	return markedUpQsoLines
+}
+
+func min(a, b int) int {
+	if a > b {
+		return b
+	} else {
+		return a
+	}
 }
