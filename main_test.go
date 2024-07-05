@@ -18,9 +18,14 @@ func TestMin_OneNegativeNumber(t *testing.T) {
 	assert.Equal(t, -14, r, `Expected -14 as minumum of -14 and 7`)
 }
 
-func TestProcessFile(t *testing.T) {
+func TestProcessFile_FullTable(t *testing.T) {
 	ProcessFile("a.log")
 	assert.True(t, EqualFiles("a_answer.xcbr", "a.xcbr"))
+}
+
+func TestProcessFile_MissingFields(t *testing.T) {
+	ProcessFile("b.log")
+	assert.True(t, EqualFiles("b_answer.xcbr", "b.xcbr"))
 }
 
 func EqualFiles(f1, f2 string) bool {
