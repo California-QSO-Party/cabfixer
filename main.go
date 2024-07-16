@@ -32,15 +32,23 @@ func ProcessFile(fileName string) {
 	}
 	lines := bytes.Split(data, []byte("\n"))
 	qsoLines := make([][]byte, 0)
+	headerLines := make([][]byte, 0)
 	for i := 0; i < len(lines); i++ {
 		if bytes.HasPrefix(lines[i], []byte("QSO:")) {
 			qsoLines = append(qsoLines, lines[i])
+		} else {
+			headerLines = append(headerLines, lines[i])
 		}
 	}
+	headerLines = append(headerLines, []byte("X-CBR: 0.1"))
 	columnPos := identifyTableColumns(qsoLines)
 	markedUpQsoLines := markUpQSOLines(qsoLines, columnPos)
+	outputDataLines := make([][]byte, 0)
+	outputDataLines = append(outputDataLines, headerLines...)
+	outputDataLines = append(outputDataLines, markedUpQsoLines...)
+	outputDataLines = append(outputDataLines, []byte("END-OF-LOG:"))
 
-	outputData := bytes.Join(markedUpQsoLines, []byte("\n"))
+	outputData := bytes.Join(outputDataLines, []byte("\n"))
 	err = os.WriteFile(newFileName, outputData, 0666)
 	if err != nil {
 		log.Fatal(err)
