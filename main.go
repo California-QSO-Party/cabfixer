@@ -37,7 +37,7 @@ func ProcessFile(fileName string) {
 		if bytes.HasPrefix(lines[i], []byte("QSO:")) {
 			qsoLines = append(qsoLines, lines[i])
 		} else {
-			headerLines = append(headerLines, lines[i])
+			headerLines = append(headerLines, bytes.Trim(lines[i], "\r"))
 		}
 	}
 	headerLines = append(headerLines, []byte("X-CBR: 0.1"))
@@ -48,7 +48,7 @@ func ProcessFile(fileName string) {
 	outputDataLines = append(outputDataLines, markedUpQsoLines...)
 	outputDataLines = append(outputDataLines, []byte("END-OF-LOG:"))
 
-	outputData := bytes.Join(outputDataLines, []byte("\n"))
+	outputData := bytes.Join(outputDataLines, []byte("\r\n"))
 	err = os.WriteFile(newFileName, outputData, 0666)
 	if err != nil {
 		log.Fatal(err)
