@@ -21,6 +21,8 @@ func main() {
 
 }
 
+const endOfLog = "END-OF-LOG:"
+
 func ProcessFile(fileName string) {
 	ext := filepath.Ext(fileName)
 	newFileName := fileName[0 : len(fileName)-len(ext)]
@@ -40,13 +42,18 @@ func ProcessFile(fileName string) {
 			headerLines = append(headerLines, bytes.Trim(lines[i], "\r"))
 		}
 	}
+	footerLines := make([][]byte, 0)
+	if string(headerLines[len(headerLines)-1]) == endOfLog {
+		headerLines = headerLines[0 : len(headerLines)-1]
+		footerLines = append(footerLines, []byte(endOfLog))
+	}
 	headerLines = append(headerLines, []byte("X-CBR: 0.1"))
 	columnPos := identifyTableColumns(qsoLines)
 	markedUpQsoLines := markUpQSOLines(qsoLines, columnPos)
 	outputDataLines := make([][]byte, 0)
 	outputDataLines = append(outputDataLines, headerLines...)
 	outputDataLines = append(outputDataLines, markedUpQsoLines...)
-	outputDataLines = append(outputDataLines, []byte("END-OF-LOG:"))
+	outputDataLines = append(outputDataLines, footerLines...)
 
 	outputData := bytes.Join(outputDataLines, []byte(eol))
 	err = os.WriteFile(newFileName, outputData, 0666)
