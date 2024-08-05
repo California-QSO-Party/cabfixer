@@ -48,7 +48,7 @@ func ProcessFile(fileName string) {
 	outputDataLines = append(outputDataLines, markedUpQsoLines...)
 	outputDataLines = append(outputDataLines, []byte("END-OF-LOG:"))
 
-	outputData := bytes.Join(outputDataLines, []byte("\r\n"))
+	outputData := bytes.Join(outputDataLines, []byte(eol))
 	err = os.WriteFile(newFileName, outputData, 0666)
 	if err != nil {
 		log.Fatal(err)
