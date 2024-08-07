@@ -19,12 +19,12 @@ func TestMin_OneNegativeNumber(t *testing.T) {
 }
 
 func TestProcessFile_FullTable(t *testing.T) {
-	ProcessFile("a.log")
+	ProcessFile("a.raw")
 	assert.True(t, EqualFiles("a_answer.xcbr", "a.xcbr"))
 }
 
 func TestProcessFile_MissingFields(t *testing.T) {
-	ProcessFile("b.log")
+	ProcessFile("b.raw")
 	assert.True(t, EqualFiles("b_answer.xcbr", "b.xcbr"))
 }
 
