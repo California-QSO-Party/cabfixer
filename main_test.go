@@ -40,8 +40,9 @@ func TestIdentifyTableColumns_RightALignedColumns(t *testing.T) {
 		newQsoLines = append(newQsoLines, []byte(qsoLines[i]))
 	}
 	result := identifyTableColumns(newQsoLines)
-	expectedResult := []int{0, 5, 11, 14, 25, 30, 46, 51, 62, 67, 76}
+	expectedResult := []int{0, 5, 11, 14, 25, 30, 43, 46, 51, 62, 67, 76}
 	fmt.Printf("%v\n", result)
+	assert.Equal(t, expectedResult, result)
 }
 
 func EqualFiles(f1, f2 string) bool {

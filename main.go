@@ -96,9 +96,23 @@ func identifyTableColumns(lines [][]byte) []int {
 	columnPos := []int{0}
 	threshold := len(lines)/2 + 1
 	for i := 1; i < len(charCount); i++ {
-		if charCount[i] > threshold && charCount[i-1] == 0 {
-			columnPos = append(columnPos, i)
+		if charCount[i] > threshold {
+			var j int
+			for j = i; j >= 0; j-- {
+				if j == 0 || charCount[j-1] == 0 {
+					break
+				}
+			}
+			if len(columnPos) == 0 || columnPos[len(columnPos)-1] < j {
+				columnPos = append(columnPos, j)
+			}
 		}
+		/*
+			if charCount[i] > threshold && charCount[i-1] == 0 {
+				columnPos = append(columnPos, i)
+			}
+		*/
+
 	}
 	columnPos = append(columnPos, longestLine)
 	return columnPos
