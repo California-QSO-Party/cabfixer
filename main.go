@@ -122,13 +122,14 @@ func identifyTableColumns(lines [][]byte) []int {
 func markUpQSOLines(qsoLines [][]byte, columnPos []int) [][]byte {
 	markedUpQsoLines := make([][]byte, len(qsoLines))
 	for i := 0; i < len(qsoLines); i++ {
-		markedUpQsoLines[i] = append(markedUpQsoLines[i], '|')
 		for j := 0; j < len(columnPos)-1; j++ {
 			l := min(columnPos[j], len(qsoLines[i]))
 			r := min(columnPos[j+1], len(qsoLines[i]))
 			e := bytes.Trim(qsoLines[i][l:r], "\r\n")
 			markedUpQsoLines[i] = append(markedUpQsoLines[i], e...)
-			markedUpQsoLines[i] = append(markedUpQsoLines[i], '|')
+			if j < len(columnPos)-2 {
+				markedUpQsoLines[i] = append(markedUpQsoLines[i], '|')
+			}
 		}
 	}
 	return markedUpQsoLines
