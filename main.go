@@ -126,7 +126,7 @@ func markUpQSOLines(qsoLines [][]byte, columnPos []int) [][]byte {
 		for j := 0; j < len(columnPos)-1; j++ {
 			l := min(columnPos[j], len(qsoLines[i]))
 			r := min(columnPos[j+1], len(qsoLines[i]))
-			e := bytes.Trim(qsoLines[i][l:r], " \t\r\n")
+			e := bytes.Trim(qsoLines[i][l:r], "\r\n")
 			markedUpQsoLines[i] = append(markedUpQsoLines[i], e...)
 			markedUpQsoLines[i] = append(markedUpQsoLines[i], '|')
 		}
