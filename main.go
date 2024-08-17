@@ -39,11 +39,13 @@ func ProcessFile(fileName string) {
 		if bytes.HasPrefix(lines[i], []byte("QSO:")) {
 			qsoLines = append(qsoLines, lines[i])
 		} else {
-			headerLines = append(headerLines, bytes.Trim(lines[i], "\r"))
+			if len(bytes.Trim(lines[i], " \r\n\t")) != 0 {
+				headerLines = append(headerLines, bytes.Trim(lines[i], "\r"))
+			}
 		}
 	}
 	footerLines := make([][]byte, 0)
-	if string(headerLines[len(headerLines)-1]) == endOfLog {
+	if string(bytes.Trim(headerLines[len(headerLines)-1], " \r\n")) == endOfLog {
 		headerLines = headerLines[0 : len(headerLines)-1]
 		footerLines = append(footerLines, []byte(endOfLog))
 	}
