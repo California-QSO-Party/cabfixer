@@ -32,6 +32,11 @@ func TestProcessFile_RealExample(t *testing.T) {
 	assert.Nil(t, EqualFiles("testcases/AF6HO-20231017-191821-471_answer.xcbr", "testcases/AF6HO-20231017-191821-471.xcbr"))
 }
 
+func TestProcessFile_RealExample_N7aae(t *testing.T) {
+	ProcessFile("testcases/N7AAE_6-20231020-163229-504.raw")
+	assert.Nil(t, EqualFiles("testcases/N7AAE_6-20231020-163229-504_answer.xcbr", "testcases/N7AAE_6-20231020-163229-504.xcbr"))
+}
+
 func TestIdentifyTableColumns_RightALignedColumns(t *testing.T) {
 	newQsoLines := make([][]byte, 0)
 	for i := 0; i < len(qsoLines); i++ {

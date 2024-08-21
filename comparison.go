@@ -56,7 +56,22 @@ func trim(a []byte) string {
 
 func headersEqual(a map[string]string, b map[string]string) error {
 	if len(a) != len(b) {
-		return fmt.Errorf("The number of headers is different")
+		if len(a) > len(b) {
+			for k, _ := range a {
+				_, ok := b[k]
+				if !ok {
+					return fmt.Errorf("Missing header from b is %v", k)
+				}
+			}
+		} else {
+			for k, _ := range b {
+				_, ok := a[k]
+				if !ok {
+					return fmt.Errorf("Missing header from a is %v", k)
+				}
+			}
+		}
+
 	}
 	for k, v := range a {
 		if v != b[k] {
