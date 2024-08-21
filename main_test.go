@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -21,17 +19,17 @@ func TestMin_OneNegativeNumber(t *testing.T) {
 
 func TestProcessFile_FullTable(t *testing.T) {
 	ProcessFile("a.raw")
-	assert.True(t, EqualFiles("a_answer.xcbr", "a.xcbr"))
+	assert.Nil(t, EqualFiles("a_answer.xcbr", "a.xcbr"))
 }
 
 func TestProcessFile_MissingFields(t *testing.T) {
 	ProcessFile("b.raw")
-	assert.True(t, EqualFiles("b_answer.xcbr", "b.xcbr"))
+	assert.Nil(t, EqualFiles("b_answer.xcbr", "b.xcbr"))
 }
 
 func TestProcessFile_RealExample(t *testing.T) {
 	ProcessFile("testcases/AF6HO-20231017-191821-471.raw")
-	assert.True(t, EqualFiles("testcases/AF6HO-20231017-191821-471_answer.xcbr", "testcases/AF6HO-20231017-191821-471.xcbr"))
+	assert.Nil(t, EqualFiles("testcases/AF6HO-20231017-191821-471_answer.xcbr", "testcases/AF6HO-20231017-191821-471.xcbr"))
 }
 
 func TestIdentifyTableColumns_RightALignedColumns(t *testing.T) {
@@ -45,16 +43,17 @@ func TestIdentifyTableColumns_RightALignedColumns(t *testing.T) {
 	assert.Equal(t, expectedResult, result)
 }
 
-func EqualFiles(f1, f2 string) bool {
-	f1Content, err := os.ReadFile(f1)
+func EqualFiles(f1, f2 string) error {
+	f1Content, err := CabRead(f1)
 	if err != nil {
-		return false
+		return fmt.Errorf("Failed to read f1 file")
 	}
-	f2Content, err := os.ReadFile(f2)
+	f2Content, err := CabRead(f2)
 	if err != nil {
-		return false
+		return fmt.Errorf("Failed to read f2 file")
 	}
-	return bytes.Equal(f1Content, f2Content)
+
+	return CabEqual(f1Content, f2Content)
 }
 
 var qsoLines = []string{
