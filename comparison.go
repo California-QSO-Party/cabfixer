@@ -26,7 +26,7 @@ func CabRead(filename string) (CabFile, error) {
 	headers := make(map[string]string)
 	qsoLines := make([]string, 0)
 	for i := 0; i < len(lines); i++ {
-		if bytes.HasPrefix(lines[i], []byte("QSO:")) {
+		if bytes.HasPrefix(bytes.Trim(lines[i], " "), []byte("QSO:")) || bytes.HasPrefix(lines[i], []byte("X-QSO:")) {
 			qsoLines = append(qsoLines, string(lines[i]))
 		} else {
 			if len(lines[i]) != 0 {
