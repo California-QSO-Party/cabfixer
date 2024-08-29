@@ -35,10 +35,12 @@ func ProcessFile(fileName string) {
 	lines := bytes.Split(data, []byte("\n"))
 	qsoLines := make([][]byte, 0)
 	headerLines := make([][]byte, 0)
+	hasXqso := false
 	for i := 0; i < len(lines); i++ {
 		if bytes.HasPrefix(lines[i], []byte("QSO:")) {
 			qsoLines = append(qsoLines, append([]byte("  "), lines[i]...))
 		} else if bytes.HasPrefix(lines[i], []byte("X-QSO:")) {
+			hasXqso = true
 			qsoLines = append(qsoLines, lines[i])
 		} else {
 			if len(bytes.Trim(lines[i], " \r\n\t")) != 0 {
@@ -46,6 +48,10 @@ func ProcessFile(fileName string) {
 			}
 		}
 	}
+	if hasXqso == false {
+		stripLeadingSpaces(qsoLines)
+	}
+
 	footerLines := make([][]byte, 0)
 	if string(bytes.Trim(headerLines[len(headerLines)-1], " \r\n")) == endOfLog {
 		headerLines = headerLines[0 : len(headerLines)-1]
@@ -144,5 +150,11 @@ func min(a, b int) int {
 		return b
 	} else {
 		return a
+	}
+}
+
+func stripLeadingSpaces(lines [][]byte) {
+	for i := 0; i < len(lines); i++ {
+		lines[i] = bytes.TrimLeft(lines[i], " ")
 	}
 }

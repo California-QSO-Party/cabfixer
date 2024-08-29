@@ -18,13 +18,13 @@ func TestMin_OneNegativeNumber(t *testing.T) {
 }
 
 func TestProcessFile_FullTable(t *testing.T) {
-	ProcessFile("a.raw")
-	assert.Nil(t, EqualFiles("a_answer.xcbr", "a.xcbr"))
+	ProcessFile("testcases/a.raw")
+	assert.Nil(t, EqualFiles("testcases/a_answer.xcbr", "testcases/a.xcbr"))
 }
 
 func TestProcessFile_MissingFields(t *testing.T) {
-	ProcessFile("b.raw")
-	assert.Nil(t, EqualFiles("b_answer.xcbr", "b.xcbr"))
+	ProcessFile("testcases/b.raw")
+	assert.Nil(t, EqualFiles("testcases/b_answer.xcbr", "testcases/b.xcbr"))
 }
 
 func TestProcessFile_RealExample(t *testing.T) {
