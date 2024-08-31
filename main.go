@@ -57,7 +57,7 @@ func ProcessFile(fileName string) {
 		headerLines = headerLines[0 : len(headerLines)-1]
 		footerLines = append(footerLines, []byte(endOfLog))
 	}
-	headerLines = append(headerLines, []byte("X-CBR: 0.1"))
+	headerLines = append(headerLines, []byte("X-CBR: 0.2"))
 	columnPos := identifyTableColumns(qsoLines)
 	markedUpQsoLines := markUpQSOLines(qsoLines, columnPos)
 	outputDataLines := make([][]byte, 0)

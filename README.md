@@ -1,4 +1,4 @@
-CABFIXER 0.1
+CABFIXER 0.2
 ========
 
 Cabfixer detects columns in cabrillo files.
