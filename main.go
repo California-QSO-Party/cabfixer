@@ -122,12 +122,6 @@ func identifyTableColumns(lines [][]byte) []int {
 				columnPos = append(columnPos, j)
 			}
 		}
-		/*
-			if charCount[i] > threshold && charCount[i-1] == 0 {
-				columnPos = append(columnPos, i)
-			}
-		*/
-
 	}
 	longestLine := longestLine(lines)
 	columnPos = append(columnPos, longestLine)
