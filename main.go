@@ -53,7 +53,7 @@ func ProcessFile(fileName string) {
 	}
 
 	footerLines := make([][]byte, 0)
-	if string(bytes.Trim(headerLines[len(headerLines)-1], " \r\n")) == endOfLog {
+	if len(headerLines) > 0 && string(bytes.Trim(headerLines[len(headerLines)-1], " \r\n")) == endOfLog {
 		headerLines = headerLines[0 : len(headerLines)-1]
 		footerLines = append(footerLines, []byte(endOfLog))
 	}
