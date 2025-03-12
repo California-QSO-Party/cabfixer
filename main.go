@@ -83,8 +83,7 @@ func longestLine(qsoLines [][]byte) int {
 	return max
 }
 
-func identifyTableColumns(lines [][]byte) []int {
-
+func countColumnChars(lines [][]byte) []int {
 	longestLine := longestLine(lines)
 	charCount := make([]int, longestLine)
 	for j := 0; j < longestLine; j++ {
@@ -102,6 +101,12 @@ func identifyTableColumns(lines [][]byte) []int {
 		}
 		charCount[j] = count
 	}
+	return charCount
+}
+
+func identifyTableColumns(lines [][]byte) []int {
+	charCount := countColumnChars(lines)
+
 	// Count positions of where each column starts.
 	columnPos := []int{0}
 	threshold := len(lines)/2 + 1
@@ -124,6 +129,7 @@ func identifyTableColumns(lines [][]byte) []int {
 		*/
 
 	}
+	longestLine := longestLine(lines)
 	columnPos = append(columnPos, longestLine)
 	return columnPos
 
